@@ -5,6 +5,7 @@ import { PlannerTabs } from "@/components/planner/PlannerTabs";
 import { PlannerHeader } from "@/components/planner/PlannerHeader";
 import { CalendarView } from "@/components/planner/CalendarView";
 import { useState } from "react";
+import { Add, Arrow, ArrowDown2 } from "iconsax-react";
 
 export default function PlannerPage() {
   const [activeTab, setActiveTab] = useState("live");
@@ -26,34 +27,36 @@ export default function PlannerPage() {
         </Heading>
         
         <Flex gap={3}>
-          <NativeSelectRoot w="200px">
+          <NativeSelectRoot w="150px">
+            <ArrowDown2 size={16} color="black" style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 1 }} />
             <NativeSelectField 
               placeholder="Open Days"
               borderWidth="1.5px"
               borderColor="gray.400"
-              color="gray.700"
+              color="black"
               fontWeight="500"
+              pl="32px"
               _hover={{ borderColor: "gray.500" }}
             >
               <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
             </NativeSelectField>
           </NativeSelectRoot>
           
-          <NativeSelectRoot w="200px">
+          <NativeSelectRoot w="120px">
+            <Add size={16} color="black" style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 1 }} />
             <NativeSelectField 
               placeholder="Nieuw"
               borderWidth="1.5px"
               borderColor="gray.400"
-              color="gray.700"
+              color="black"
               fontWeight="500"
+              pl="32px"
               _hover={{ borderColor: "gray.500" }}
             >
               <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
             </NativeSelectField>
+            <ArrowDown2 size={16} color="black" style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 1 }} />
+
           </NativeSelectRoot>
         </Flex>
       </Flex> 

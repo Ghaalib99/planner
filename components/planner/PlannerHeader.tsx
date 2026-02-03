@@ -3,6 +3,7 @@
 import { Box, Flex, HStack, Button, Text, IconButton } from "@chakra-ui/react";
 import { Shuffle, Filter, ArrowLeft2, ArrowRight2, Lock, Add, People, ArrowDown2 } from "iconsax-react";
 import { FiChevronDown } from "react-icons/fi";
+import { GoDotFill } from "react-icons/go";
 
 interface PlannerHeaderProps {
   currentDate: Date;
@@ -126,8 +127,9 @@ export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps)
           color={"#000"}
           _hover={{ bg: "gray.50" }}
         >
+          <GoDotFill style={{ marginRight: "4px" }} color={"#0CA740"}/>
           This day
-          <FiChevronDown style={{ marginLeft: "0.5rem" }} color={"#000"}/>
+          <FiChevronDown style={{ marginLeft: "4px" }} color={"#000"}/>
         </Button>
 
         <Button

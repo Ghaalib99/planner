@@ -3,103 +3,8 @@
 import { Box, Grid, Text, VStack, HStack, Badge, Button } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useMemo, useState } from "react";
-
-interface TimeSlot {
-  time: string;
-  hour: number;
-  minute: number;
-}
-
-interface Event {
-  id: string;
-  department: string;
-  title: string;
-  startTime: string;
-  endTime: string;
-  staff: string;
-  color: "orange" | "green" | "yellow" | "blue" | "purple";
-  column: number;
-  columnSpan?: number; // Number of columns the event spans (default: 1)
-}
-
-interface CalendarViewProps {
-  events?: Event[];
-  departments?: string[];
-  startHour?: number;
-  endHour?: number;
-  slotInterval?: 30 | 60;
-}
-
-const defaultDepartments = [
-  "Behandelingkamer1",
-  "Management",
-  "Bijzonderheden-Verlof-Cursus-...",
-  "Financien",
-];
-
-const defaultEvents: Event[] = [
-  {
-    id: "1",
-    department: "HG",
-    title: "Surgery",
-    startTime: "11:00",
-    endTime: "13:00",
-    staff: "Haico de Gast",
-    color: "orange",
-    column: 0,
-  },
-  {
-    id: "2",
-    department: "DL",
-    title: "Pijnspecialist",
-    startTime: "11:00",
-    endTime: "13:30",
-    staff: "Diane Lane",
-    color: "green",
-    column: 0,
-  },
-  {
-    id: "3",
-    department: "HG",
-    title: "Pijnspecialist",
-    startTime: "01:30",
-    endTime: "05:00",
-    staff: "Diane Lane",
-    color: "yellow",
-    column: 0,
-    columnSpan: 2,
-  },
-  {
-    id: "4",
-    department: "HG",
-    title: "Pijnspecialist",
-    startTime: "13:00",
-    endTime: "15:00",
-    staff: "Haico de Gast",
-    color: "orange",
-    column: 0,
-  },
-  {
-    id: "5",
-    department: "HG",
-    title: "Pijnspecialist",
-    startTime: "16:00",
-    endTime: "20:00",
-    staff: "Diane Lane",
-    color: "green",
-    column: 2,
-  },
-  {
-    id: "6",
-    department: "HG",
-    title: "Pijnspecialist",
-    startTime: "11:30",
-    endTime: "13:30",
-    staff: "Diane Lane",
-    color: "yellow",
-    column: 3,
-  },
-];
+import { Event, CalendarViewProps, TimeSlot } from "./types";
+import { defaultDepartments, defaultEvents } from "./data";
 
 export const CalendarView = ({
   events = defaultEvents,
@@ -110,7 +15,6 @@ export const CalendarView = ({
 }: CalendarViewProps) => {
   const [expandedColumns, setExpandedColumns] = useState<Set<number>>(new Set());
 
-  // Generate time slots dynamically
   const timeSlots = useMemo(() => {
     const slots: TimeSlot[] = [];
     const intervalMinutes = slotInterval;
@@ -128,7 +32,6 @@ export const CalendarView = ({
     return slots;
   }, [startHour, endHour, slotInterval]);
 
-  // Calculate event position and height
   const calculateEventStyle = (event: Event, colIdx: number, allEvents: Event[]) => {
     const [startHour, startMinute] = event.startTime.split(":").map(Number);
     const [endHour, endMinute] = event.endTime.split(":").map(Number);
@@ -265,7 +168,6 @@ export const CalendarView = ({
       boxShadow="sm"
       w="full"
     >
-      {/* Department Headers */}
       <Grid
         templateColumns={`${TIME_COLUMN_WIDTH} repeat(${departments.length}, minmax(200px, 1fr))`}
         gap={0}
@@ -298,6 +200,7 @@ export const CalendarView = ({
             borderColor="gray.300"
             display="flex"
             alignItems="center"
+          
           >
             <Text 
               fontSize="sm" 
@@ -312,7 +215,6 @@ export const CalendarView = ({
         ))}
       </Grid>
 
-      {/* Calendar Grid */}
       <Box position="relative" overflowX="auto" overflowY="visible">
         <Box position="relative">
         <Grid
@@ -320,7 +222,6 @@ export const CalendarView = ({
           gap={0}
           minH="600px"
         >
-          {/* Time Column */}
           <VStack align="stretch" gap={0} position="sticky" left={0} bg="white" zIndex={5}>
             {timeSlots.map((slot, idx) => (
               <Box
@@ -341,14 +242,12 @@ export const CalendarView = ({
             ))}
           </VStack>
 
-          {/* Event Columns */}
           {departments.map((dept, colIdx) => (
             <Box
               key={colIdx}
               position="relative"
               minH="full"
             >
-              {/* Time Slot Backgrounds */}
               {timeSlots.map((_, rowIdx) => (
                 <Box
                   key={rowIdx}
@@ -357,60 +256,52 @@ export const CalendarView = ({
                   borderBottom={rowIdx < timeSlots.length - 1 ? "1px solid" : "none"}
                   borderColor="gray.300"
                   bg="white"
-                  transition="background 0.15s"
+                  py={1}
+                  transition="background 0.2s ease"
                   _hover={{ bg: "gray.50" }}
                   cursor="pointer"
                 />
               ))}
 
-              {/* See All Button - shows when there are more than 2 events and not expanded */}
-              {getColumnEvents(colIdx).length > 2 && !expandedColumns.has(colIdx) && (() => {
-                const columnEvents = getColumnEvents(colIdx);
-                const totalToShow = 2;
-                const widthPercentage = 100 / (totalToShow + 1); // +1 for the "See all" button
-                const leftPercentage = widthPercentage * totalToShow;
+              {colIdx === 0 && (() => {
+                const widthPercentage = 100 / 3; 
+                const leftPercentage = 2 * widthPercentage; 
                 
-                // Find the earliest event to position the button at the same top position
-                const earliestEvent = columnEvents.reduce((earliest, event) => {
-                  const eventStart = timeToMinutes(event.startTime);
-                  const earliestStart = timeToMinutes(earliest.startTime);
-                  return eventStart < earliestStart ? event : earliest;
-                });
-                
-                const [startHour, startMinute] = earliestEvent.startTime.split(":").map(Number);
-                const startMinutesFromDayStart = startHour * 60 + startMinute;
+                const buttonHour = 12;
+                const buttonMinute = 0;
+                const buttonMinutesFromDayStart = buttonHour * 60 + buttonMinute;
                 const calendarStartMinutes = timeSlots[0].hour * 60 + timeSlots[0].minute;
-                const topOffset = ((startMinutesFromDayStart - calendarStartMinutes) / slotInterval) * 80;
+                const topOffset = ((buttonMinutesFromDayStart - calendarStartMinutes) / slotInterval) * 80;
                 
                 return (
                   <Box
                     position="absolute"
-                    top={`${topOffset + 10}px`}
+                    top={`${topOffset + 4}px`}
                     left={`calc(${leftPercentage}% + 4px)`}
                     w={`calc(${widthPercentage}% - 8px)`}
+                    h="72px"
                     zIndex={5}
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
+                    bg="#F0F5FA"
+                    borderColor="gray.300"
+                    borderRadius="lg"
+                    transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                    _hover={{ bg: "gray.200", borderColor: "gray.400" }}
+                    cursor="default"
                   >
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => toggleExpanded(colIdx)}
-                      bg="white"
-                      border="1px solid"
-                      borderColor="gray.300"
-                      color="gray.600"
+                    <Text
                       fontSize="sm"
-                      _hover={{ bg: "gray.50" }}
+                      fontWeight="500"
+                      color="gray.600"
                     >
                       See all
-                    </Button>
+                    </Text>
                   </Box>
                 );
               })()}
 
-              {/* Events */}
               {events
                 .filter((event) => event.column === colIdx && (event.columnSpan || 1) === 1)
                 .map((event, eventIdx) => {
@@ -418,34 +309,37 @@ export const CalendarView = ({
                   const { top, height, leftPercentage, widthPercentage, hasOverlap } = calculateEventStyle(event, colIdx, events);
                   
                   const isExpanded = expandedColumns.has(colIdx);
-                  const columnEvents = getColumnEvents(colIdx);
+                  const columnEvents = getColumnEvents(colIdx).filter(e => (e.columnSpan || 1) === 1);
+                  const totalEvents = columnEvents.length;
                   
-                  // Show first 2 events when collapsed, all events when expanded
                   const maxEventsWhenCollapsed = 2;
                   const eventPosition = columnEvents.findIndex(e => e.id === event.id);
                   const shouldShow = isExpanded || eventPosition < maxEventsWhenCollapsed;
 
                   if (!shouldShow) return null;
                   
-                  // When collapsed and showing first 2 events, position them side by side
-                  let displayLeftPercentage = leftPercentage;
-                  let displayWidthPercentage = widthPercentage;
+                  let displayLeftPercentage = 0;
+                  let displayWidthPercentage = 100;
                   
-                  if (!isExpanded && columnEvents.length > 2) {
-                    // Make room for "See all" button as if it's a third item
-                    const totalItems = maxEventsWhenCollapsed + 1;
-                    displayWidthPercentage = 100 / totalItems;
-                    displayLeftPercentage = displayWidthPercentage * eventPosition;
+                  if (event.subColumn !== undefined && event.subColumnSpan !== undefined) {
+                    const subColumnWidth = 100 / 3;
+                    displayLeftPercentage = event.subColumn * subColumnWidth;
+                    displayWidthPercentage = event.subColumnSpan * subColumnWidth;
+                  } else if (isExpanded) {
+                    displayLeftPercentage = leftPercentage;
+                    displayWidthPercentage = widthPercentage;
+                  } else {
+                    if (totalEvents === 1) {
+                      displayLeftPercentage = 0;
+                      displayWidthPercentage = 100;
+                    } else if (totalEvents === 2) {
+                      displayWidthPercentage = 50;
+                      displayLeftPercentage = eventPosition * 50;
+                    } else {
+                      displayWidthPercentage = 100 / 3;
+                      displayLeftPercentage = eventPosition * (100 / 3);
+                    }
                   }
-                  
-                  // Handle multi-column spanning events
-                  const columnSpan = event.columnSpan || 1;
-                  const columnWidth = 100; // Each column is 100% of its grid cell
-                  
-                  // Calculate the actual width considering column span
-                  // We need to get the width of a single column from the grid
-                  const spanWidth = columnSpan > 1 ? `${columnSpan * 100}%` : `calc(${displayWidthPercentage}% - 8px)`;
-                  const spanLeft = columnSpan > 1 ? "4px" : `calc(${displayLeftPercentage}% + 4px)`;
 
                   return (
                     <Tooltip
@@ -456,10 +350,10 @@ export const CalendarView = ({
                     >
                       <Box
                         position="absolute"
-                        top={`${top}px`}
-                        left={spanLeft}
-                        w={spanWidth}
-                        h={`${height}px`}
+                        top={`${top + 4}px`}
+                        left={`calc(${displayLeftPercentage}% + 4px)`}
+                        w={`calc(${displayWidthPercentage}% - 8px)`}
+                        h={`calc(${height}px - 8px)`}
                         bg={colors.bg}
                         border="2px solid"
                         borderColor={colors.border}
@@ -471,7 +365,7 @@ export const CalendarView = ({
                           shadow: "md",
                           zIndex: 25,
                         }}
-                        transition="all 0.15s ease"
+                        transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
                         overflow="hidden"
                       >
                         <VStack align="start" gap={0.5} h="full">
@@ -483,7 +377,7 @@ export const CalendarView = ({
                               bg="white"
                               px={1.5}
                               py={0.5}
-                              borderRadius="sm"
+                              borderRadius="full"
                             >
                               {event.department}
                             </Box>
@@ -520,7 +414,6 @@ export const CalendarView = ({
           ))}
         </Grid>
         
-        {/* Multi-column spanning events overlay */}
         <Box position="absolute" top={0} left={TIME_COLUMN_WIDTH} right={0} bottom={0} pointerEvents="none">
           {events.filter(event => (event.columnSpan || 1) > 1).map((event) => {
             const colors = getEventColor(event.color);
@@ -535,8 +428,15 @@ export const CalendarView = ({
             
             const columnSpan = event.columnSpan || 1;
             const columnIndex = event.column;
-            const leftPercentage = (columnIndex / departments.length) * 100;
-            const widthPercentage = (columnSpan / departments.length) * 100;
+            const subColumn = event.subColumn || 0;
+            const subColumnSpan = event.subColumnSpan || 3; 
+     
+            const departmentWidth = 100 / departments.length;
+            const subColumnWidth = departmentWidth / 3;
+            
+            const leftPercentage = (columnIndex * departmentWidth) + (subColumn * subColumnWidth);
+            
+            const widthPercentage = subColumnSpan * subColumnWidth;
             
             return (
               <Tooltip
@@ -547,10 +447,10 @@ export const CalendarView = ({
               >
                 <Box
                   position="absolute"
-                  top={`${topOffset}px`}
+                  top={`${topOffset + 4}px`}
                   left={`calc(${leftPercentage}% + 4px)`}
                   w={`calc(${widthPercentage}% - 8px)`}
-                  h={`${height}px`}
+                  h={`calc(${height}px - 8px)`}
                   bg={colors.bg}
                   border="2px solid"
                   borderColor={colors.border}
@@ -563,7 +463,7 @@ export const CalendarView = ({
                     shadow: "md",
                     zIndex: 25,
                   }}
-                  transition="all 0.15s ease"
+                  transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
                   overflow="hidden"
                 >
                   <VStack align="start" gap={0.5} h="full">
@@ -575,7 +475,8 @@ export const CalendarView = ({
                         bg="white"
                         px={1.5}
                         py={0.5}
-                        borderRadius="sm"
+                        borderRadius="100%"
+                        rounded="full"
                       >
                         {event.department}
                       </Box>
