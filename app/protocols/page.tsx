@@ -1,16 +1,14 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 
-export default function HomePage() {
+export default function ProtocolsPage() {
   return (
     <Box>
       <Heading size="2xl" mb={4} color="gray.800">
-        Startpagina
+        My to do Protocols
       </Heading>
       <Text color="gray.600">
-        Welcome to the home page.
+        Manage your protocols and to-do items.
       </Text>
     </Box>
   );
 }
-       
-
