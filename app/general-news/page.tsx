@@ -1,16 +1,14 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 
-export default function HomePage() {
+export default function GeneralNewsPage() {
   return (
     <Box>
       <Heading size="2xl" mb={4} color="gray.800">
-        Startpagina
+        General News
       </Heading>
       <Text color="gray.600">
-        Welcome to the home page.
+        General news and announcements.
       </Text>
     </Box>
   );
 }
-       
-
