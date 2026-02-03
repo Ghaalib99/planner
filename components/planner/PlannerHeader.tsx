@@ -2,7 +2,6 @@
 
 import { Box, Flex, HStack, Button, Text, IconButton } from "@chakra-ui/react";
 import { Shuffle, Filter, ArrowLeft2, ArrowRight2, Lock, Add, People, ArrowDown2 } from "iconsax-react";
-import { CiFilter } from "react-icons/ci";
 import { FiChevronDown } from "react-icons/fi";
 
 interface PlannerHeaderProps {
