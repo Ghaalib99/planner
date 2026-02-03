@@ -1,11 +1,10 @@
 "use client";
 
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, NativeSelectRoot, NativeSelectField } from "@chakra-ui/react";
 import { PlannerTabs } from "@/components/planner/PlannerTabs";
 import { PlannerHeader } from "@/components/planner/PlannerHeader";
 import { CalendarView } from "@/components/planner/CalendarView";
 import { useState } from "react";
-import { Select } from "@chakra-ui/react";
 
 export default function PlannerPage() {
   const [activeTab, setActiveTab] = useState("live");
@@ -22,12 +21,44 @@ export default function PlannerPage() {
         mb={4}
         justify="space-between"
       >
-        <Heading size="2xl" mb={4} color="gray.800">
+        <Heading size="2xl" color="gray.800">
           Planner
         </Heading>
+        
+        <Flex gap={3}>
+          <NativeSelectRoot w="200px">
+            <NativeSelectField 
+              placeholder="Open Days"
+              borderWidth="1.5px"
+              borderColor="gray.400"
+              color="gray.700"
+              fontWeight="500"
+              _hover={{ borderColor: "gray.500" }}
+            >
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+            </NativeSelectField>
+          </NativeSelectRoot>
+          
+          <NativeSelectRoot w="200px">
+            <NativeSelectField 
+              placeholder="Nieuw"
+              borderWidth="1.5px"
+              borderColor="gray.400"
+              color="gray.700"
+              fontWeight="500"
+              _hover={{ borderColor: "gray.500" }}
+            >
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+            </NativeSelectField>
+          </NativeSelectRoot>
+        </Flex>
       </Flex> 
 
-      <Box p={{ base: 4, md: 6 }}>
+      <Box p={{ base: 4, md: 6 }} >
         <PlannerTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
         <PlannerHeader

@@ -1,7 +1,8 @@
 "use client";
 
-import { Box, Flex, HStack, Button, Text } from "@chakra-ui/react";
-import { Shuffle, Filter, ArrowLeft2, ArrowRight2, Lock, Add } from "iconsax-react";
+import { Box, Flex, HStack, Button, Text, IconButton } from "@chakra-ui/react";
+import { Shuffle, Filter, ArrowLeft2, ArrowRight2, Lock, Add, People, ArrowDown2 } from "iconsax-react";
+import { CiFilter } from "react-icons/ci";
 import { FiChevronDown } from "react-icons/fi";
 
 interface PlannerHeaderProps {
@@ -10,10 +11,14 @@ interface PlannerHeaderProps {
 }
 
 export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps) => {
-  const formatDate = (date: Date) => {
+  const formatDay = (date: Date) => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return `${days[date.getDay()]} ${date.getDate()}`;
+  };
+
+  const formatMonth = (date: Date) => {
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`;
+    return `${months[date.getMonth()]}, ${date.getFullYear()}`;
   };
 
   const goToPreviousDay = () => {
@@ -30,85 +35,109 @@ export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps)
 
   return (
     <Flex
-      direction={{ base: "column", lg: "row" }}
       justify="space-between"
-      align={{ base: "stretch", lg: "center" }}
+      align="center"
       gap={4}
       mb={6}
+      flexWrap="wrap"
     >
-      {/* Left: Date and Controls */}
-      <HStack gap={3} flexWrap="wrap">
+      {/* Left: Date */}
+      <HStack gap={4}>
         <Text fontSize="sm" color="gray.600" fontWeight="500">
-          {formatDate(currentDate)}
+          {formatDay(currentDate)}
         </Text>
+        <Text fontSize="lg" fontWeight="600" color="gray.800">
+          {formatMonth(currentDate)}
+        </Text>
+      </HStack>
 
-        <HStack gap={2}>
-          <Button
-            variant="ghost"
-            size="sm"
-            px={2}
-            _hover={{ bg: "gray.100" }}
-          >
-            <Shuffle size={18} />
-          </Button>
+      {/* Right: Controls */}
+      <HStack flexWrap="wrap">
+        <IconButton
+          variant="ghost"
+          size="sm"
+           borderWidth="1px"
+          borderColor="#D9E5F2"
+          borderStyle="solid"
+          color={"#000"}
+          _hover={{ bg: "gray.100" }}
+        >
+          <People size={18} color={"#000"}/>
+        </IconButton>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            px={2}
-            _hover={{ bg: "gray.100" }}
-          >
-            <Filter size={18} />
-          </Button>
+        <IconButton
+          variant="ghost"
+          size="sm"
+           borderWidth="1px"
+          borderColor="#D9E5F2"
+          borderStyle="solid"
+          color={"#000"}
+          _hover={{ bg: "gray.100" }}
+        >
+          <Filter size={18} color={"#000"}/>
+        </IconButton>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            px={2}
-            onClick={goToPreviousDay}
-            _hover={{ bg: "gray.100" }}
-          >
-            <ArrowLeft2 size={18} />
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            px={2}
-            onClick={goToNextDay}
-            _hover={{ bg: "gray.100" }}
-          >
-            <ArrowRight2 size={18} />
-          </Button>
-        </HStack>
+        <IconButton
+          variant="ghost"
+          size="sm"
+          borderWidth="1px"
+          borderRightWidth={0}
+          borderColor="#D9E5F2"
+          borderStyle="solid"
+          color={"#000"}
+          onClick={goToPreviousDay}
+          _hover={{ bg: "gray.100" }}
+        >
+          <ArrowLeft2 size={18} color={"#000"}/>
+        </IconButton>
 
         <Button
           variant="outline"
           size="sm"
-          rightIcon={<FiChevronDown />}
-          borderColor="gray.300"
+           borderWidth="1px"
+          borderColor="#D9E5F2"
+          borderStyle="solid"
+          mx="-10px"
+          color={"#000"}
           _hover={{ bg: "gray.50" }}
         >
           Current day
         </Button>
 
+        <IconButton
+          variant="ghost"
+          size="sm"
+           borderWidth="1px"
+          borderColor="#D9E5F2"
+          borderStyle="solid"
+          borderLeftWidth={0}
+          color={"#000"}
+          onClick={goToNextDay}
+          _hover={{ bg: "gray.100" }}
+        >
+          <ArrowRight2 size={18} color={"#000"}/>
+        </IconButton>
+
         <Button
           variant="outline"
           size="sm"
-          rightIcon={<FiChevronDown />}
-          borderColor="gray.300"
+           borderWidth="1px"
+          borderColor="#D9E5F2"
+          borderStyle="solid"
+          color={"#000"}
           _hover={{ bg: "gray.50" }}
         >
           This day
+          <FiChevronDown style={{ marginLeft: "0.5rem" }} color={"#000"}/>
         </Button>
-      </HStack>
 
-      {/* Right: Action Buttons */}
-      <HStack gap={2} flexWrap="wrap">
         <Button
           variant="outline"
           size="sm"
-          borderColor="gray.300"
+           borderWidth="1px"
+          borderColor="#D9E5F2"
+          borderStyle="solid"
+          color={"#000"}
           _hover={{ bg: "gray.50" }}
         >
           Publish All
@@ -117,20 +146,14 @@ export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps)
         <Button
           variant="outline"
           size="sm"
-          leftIcon={<Lock size={16} />}
-          borderColor="gray.300"
+          borderWidth="1px"
+          borderColor="#D9E5F2"
+          borderStyle="solid"
+          color={"#000"}
           _hover={{ bg: "gray.50" }}
         >
+          <Add size={20} style={{ marginRight: "0.5rem" }} color="#000"/>
           Lock Shift
-        </Button>
-
-        <Button
-          colorScheme="blue"
-          size="sm"
-          leftIcon={<Add size={16} />}
-          rightIcon={<FiChevronDown />}
-        >
-          Nieuw
         </Button>
       </HStack>
     </Flex>

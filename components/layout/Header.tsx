@@ -33,29 +33,35 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
           <IconButton
             variant="ghost"
             aria-label="Grid view"
+            bg="#F6FAFD"
+            rounded="lg"
             size="sm"
             _hover={{ bg: "gray.100" }}
           >
-            <RxDashboard size={20} />
+            <RxDashboard size={30} color="#009FE3"/>
           </IconButton>
 
           <IconButton
             variant="ghost"
             aria-label="Settings"
+            bg="#F6FAFD"
+            rounded="lg"
             size="sm"
             _hover={{ bg: "gray.100" }}
           >
-            <Setting2 size={20} />
+            <Setting2 size={30} color="#000"/>
           </IconButton>
 
           <Box position="relative">
             <IconButton
               variant="ghost"
               aria-label="Notifications"
+              bg="#F6FAFD"
+              rounded="lg"
               size="sm"
               _hover={{ bg: "gray.100" }}
             >
-              <Notification size={20} />
+              <Notification size={30} color="#000"/>
             </IconButton>
             <Box
               position="absolute"

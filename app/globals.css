@@ -27,4 +27,6 @@ body {
 
 button {
   cursor: pointer;
+  border: #D9E5F2;
+  color: var(--foreground);
 }

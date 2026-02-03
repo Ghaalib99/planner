@@ -10,7 +10,7 @@ interface Tab {
 const tabs: Tab[] = [
   { id: "live", label: "Live" },
   { id: "planner", label: "Planner" },
-  { id: "description", label: "Description of the live" },
+  // { id: "description", label: "Description of the live" },
 ];
 
 interface PlannerTabsProps {
@@ -20,28 +20,32 @@ interface PlannerTabsProps {
 
 export const PlannerTabs = ({ activeTab, onTabChange }: PlannerTabsProps) => {
   return (
-    <HStack gap={2} mb={4} flexWrap="wrap">
+    <HStack gap={2} mb={4} flexWrap="wrap" rounded="full" bg="#FF6669/66" borderWidth={1} borderColor="#FF6669">
+      <Box bg="white" p={1} rounded="full" display="flex" gap={2}>
       {tabs.map((tab) => (
         <Box
           key={tab.id}
           as="button"
           px={4}
-          py={2}
+          py={1.5}
           borderRadius="full"
-          bg={activeTab === tab.id ? "red.500" : "transparent"}
+          bg={activeTab === tab.id ? "#FF383C" : "white"}
           color={activeTab === tab.id ? "white" : "gray.600"}
           fontSize="sm"
           fontWeight="500"
           cursor="pointer"
           transition="all 0.2s"
           _hover={{
-            bg: activeTab === tab.id ? "red.600" : "gray.100",
+            bg: activeTab === tab.id ? "red.500" : "gray.100",
           }}
           onClick={() => onTabChange(tab.id)}
         >
           {tab.label}
         </Box>
       ))}
+      </Box>
+        <Text ml={2} color="black">Description of the live</Text>
+      
     </HStack>
   );
 };
