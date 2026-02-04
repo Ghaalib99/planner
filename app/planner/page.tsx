@@ -4,12 +4,13 @@ import { Box, Flex, Heading, Text, NativeSelectRoot, NativeSelectField } from "@
 import { PlannerTabs } from "@/components/planner/PlannerTabs";
 import { PlannerHeader } from "@/components/planner/PlannerHeader";
 import { CalendarView } from "@/components/planner/CalendarView";
+import { Roster } from "@/components/planner/Roster";
 import { useState } from "react";
 import { Add, Arrow, ArrowDown2 } from "iconsax-react";
 
 export default function PlannerPage() {
   const [activeTab, setActiveTab] = useState("live");
-  const [currentDate, setCurrentDate] = useState(new Date(2025, 8, 8));
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   return (
     <Box>
@@ -27,7 +28,7 @@ export default function PlannerPage() {
         </Heading>
         
         <Flex gap={3}>
-          <NativeSelectRoot w="150px">
+          <NativeSelectRoot w="120px">
             <ArrowDown2 size={16} color="black" style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 1 }} />
             <NativeSelectField 
               placeholder="Open Days"
@@ -54,9 +55,9 @@ export default function PlannerPage() {
               _hover={{ borderColor: "gray.500" }}
             >
               <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
             </NativeSelectField>
-            <ArrowDown2 size={16} color="black" style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 1 }} />
-
           </NativeSelectRoot>
         </Flex>
       </Flex> 
@@ -64,12 +65,17 @@ export default function PlannerPage() {
       <Box p={{ base: 4, md: 6 }} >
         <PlannerTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        <PlannerHeader
-          currentDate={currentDate}
-          onDateChange={setCurrentDate}
-        />
-
-        <CalendarView />
+        <Flex gap={4}>
+          {activeTab === "live" && <Roster />}
+          
+          <Box flex={1}>
+            <PlannerHeader
+              currentDate={currentDate}
+              onDateChange={setCurrentDate}
+            />
+            <CalendarView currentDate={currentDate} />
+          </Box>
+        </Flex>
       </Box>
     </Box>
   );

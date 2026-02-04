@@ -5,6 +5,7 @@ import { Tooltip } from "@/components/ui/tooltip";
 import { useMemo, useState } from "react";
 import { Event, CalendarViewProps, TimeSlot } from "./types";
 import { defaultDepartments, defaultEvents } from "./data";
+import { EventDetailDialog } from "./EventDetailDialog";
 
 export const CalendarView = ({
   events = defaultEvents,
@@ -12,8 +13,21 @@ export const CalendarView = ({
   startHour = 11,
   endHour = 16,
   slotInterval = 30,
+  currentDate = new Date(),
 }: CalendarViewProps) => {
   const [expandedColumns, setExpandedColumns] = useState<Set<number>>(new Set());
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const currentDateString = formatDate(currentDate);
+  const filteredEvents = events.filter(event => !event.date || event.date === currentDateString);
 
   const timeSlots = useMemo(() => {
     const slots: TimeSlot[] = [];
@@ -44,7 +58,6 @@ export const CalendarView = ({
     const duration = endMinutesFromDayStart - startMinutesFromDayStart;
     const height = (duration / slotInterval) * 80;
 
-    // Find overlapping events in the same column
     const columnEvents = allEvents.filter((e) => e.column === colIdx);
     const overlappingEvents = columnEvents.filter((e) => {
       const [eStartHour, eStartMinute] = e.startTime.split(":").map(Number);
@@ -52,13 +65,11 @@ export const CalendarView = ({
       const eStartMinutes = eStartHour * 60 + eStartMinute;
       const eEndMinutes = eEndHour * 60 + eEndMinute;
       
-      // Check if events overlap
       return (
         (startMinutesFromDayStart < eEndMinutes && endMinutesFromDayStart > eStartMinutes)
       );
     });
 
-    // Sort overlapping events by start time, then by duration (longer first)
     const sortedOverlapping = [...overlappingEvents].sort((a, b) => {
       const aStart = timeToMinutes(a.startTime);
       const bStart = timeToMinutes(b.startTime);
@@ -66,10 +77,9 @@ export const CalendarView = ({
       
       const aDuration = timeToMinutes(a.endTime) - aStart;
       const bDuration = timeToMinutes(b.endTime) - bStart;
-      return bDuration - aDuration; // Longer events first
+      return bDuration - aDuration; 
     });
 
-    // Calculate horizontal position
     const eventIndex = sortedOverlapping.findIndex((e) => e.id === event.id);
     const totalOverlapping = sortedOverlapping.length;
     const widthPercentage = 100 / totalOverlapping;
@@ -121,7 +131,7 @@ export const CalendarView = ({
   };
 
   const getColumnEvents = (colIdx: number) => {
-    return events.filter((event) => event.column === colIdx);
+    return filteredEvents.filter((event) => event.column === colIdx);
   };
 
   const hasOverlappingEvents = (colIdx: number): boolean => {
@@ -302,11 +312,11 @@ export const CalendarView = ({
                 );
               })()}
 
-              {events
+              {filteredEvents
                 .filter((event) => event.column === colIdx && (event.columnSpan || 1) === 1)
                 .map((event, eventIdx) => {
                   const colors = getEventColor(event.color);
-                  const { top, height, leftPercentage, widthPercentage, hasOverlap } = calculateEventStyle(event, colIdx, events);
+                  const { top, height, leftPercentage, widthPercentage, hasOverlap } = calculateEventStyle(event, colIdx, filteredEvents);
                   
                   const isExpanded = expandedColumns.has(colIdx);
                   const columnEvents = getColumnEvents(colIdx).filter(e => (e.columnSpan || 1) === 1);
@@ -367,6 +377,10 @@ export const CalendarView = ({
                         }}
                         transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
                         overflow="hidden"
+                        onClick={(e) => {
+                          setSelectedEvent(event);
+                          setAnchorEl(e.currentTarget);
+                        }}
                       >
                         <VStack align="start" gap={0.5} h="full">
                           <HStack gap={1} mb={0.5}>
@@ -415,7 +429,7 @@ export const CalendarView = ({
         </Grid>
         
         <Box position="absolute" top={0} left={TIME_COLUMN_WIDTH} right={0} bottom={0} pointerEvents="none">
-          {events.filter(event => (event.columnSpan || 1) > 1).map((event) => {
+          {filteredEvents.filter(event => (event.columnSpan || 1) > 1).map((event) => {
             const colors = getEventColor(event.color);
             const [startHour, startMinute] = event.startTime.split(":").map(Number);
             const [endHour, endMinute] = event.endTime.split(":").map(Number);
@@ -465,6 +479,10 @@ export const CalendarView = ({
                   }}
                   transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
                   overflow="hidden"
+                  onClick={(e) => {
+                    setSelectedEvent(event);
+                    setAnchorEl(e.currentTarget);
+                  }}
                 >
                   <VStack align="start" gap={0.5} h="full">
                     <HStack gap={1} mb={0.5}>
@@ -512,6 +530,17 @@ export const CalendarView = ({
         </Box>
         </Box>
       </Box>
+
+      <EventDetailDialog 
+        event={selectedEvent}
+        events={filteredEvents}
+        open={!!selectedEvent}
+        onClose={() => {
+          setSelectedEvent(null);
+          setAnchorEl(null);
+        }}
+        anchorEl={anchorEl}
+      />
     </Box>
   );
 };

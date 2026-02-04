@@ -1,9 +1,10 @@
 "use client";
 
-import { Box, Flex, HStack, Button, Text, IconButton } from "@chakra-ui/react";
+import { Box, Flex, HStack, Button, Text, IconButton, NativeSelectRoot, NativeSelectField } from "@chakra-ui/react";
 import { Shuffle, Filter, ArrowLeft2, ArrowRight2, Lock, Add, People, ArrowDown2 } from "iconsax-react";
 import { FiChevronDown } from "react-icons/fi";
 import { GoDotFill } from "react-icons/go";
+import { useState } from "react";
 
 interface PlannerHeaderProps {
   currentDate: Date;
@@ -11,6 +12,7 @@ interface PlannerHeaderProps {
 }
 
 export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps) => {
+  const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "custom">("day");
   const formatDay = (date: Date) => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return `${days[date.getDay()]} ${date.getDate()}`;
@@ -33,6 +35,10 @@ export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps)
     onDateChange(newDate);
   };
 
+  const goToCurrentDay = () => {
+    onDateChange(new Date());
+  };
+
   return (
     <Flex
       justify="space-between"
@@ -41,9 +47,8 @@ export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps)
       mb={6}
       flexWrap="wrap"
     >
-      {/* Left: Date */}
       <HStack gap={4}>
-        <Text fontSize="sm" color="gray.600" fontWeight="500">
+        <Text fontSize="sm" color="black" borderWidth="1px" borderColor="gray.300"  p={1} px={3} rounded="full" fontWeight="500">
           {formatDay(currentDate)}
         </Text>
         <Text fontSize="lg" fontWeight="600" color="gray.800">
@@ -100,6 +105,7 @@ export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps)
           mx="-10px"
           color={"#000"}
           _hover={{ bg: "gray.50" }}
+          onClick={goToCurrentDay}
         >
           Current day
         </Button>
@@ -118,19 +124,48 @@ export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps)
           <ArrowRight2 size={18} color={"#000"}/>
         </IconButton>
 
-        <Button
-          variant="outline"
-          size="sm"
-           borderWidth="1px"
-          borderColor="#D9E5F2"
-          borderStyle="solid"
-          color={"#000"}
-          _hover={{ bg: "gray.50" }}
-        >
-          <GoDotFill style={{ marginRight: "4px" }} color={"#0CA740"}/>
-          This day
-          <FiChevronDown style={{ marginLeft: "4px" }} color={"#000"}/>
-        </Button>
+        <NativeSelectRoot w="130px" size="sm">
+          <Box 
+            position="absolute" 
+            left="12px" 
+            top="50%" 
+            transform="translateY(-50%)" 
+            pointerEvents="none" 
+            zIndex={1}
+            display="flex"
+            alignItems="center"
+          >
+            <GoDotFill color={"#0CA740"} size={12}/>
+          </Box>
+          <FiChevronDown 
+            size={16} 
+            color="black" 
+            style={{ 
+              position: "absolute", 
+              right: "10px", 
+              top: "50%", 
+              transform: "translateY(-50%)", 
+              pointerEvents: "none", 
+              zIndex: 1 
+            }} 
+          />
+          <NativeSelectField
+            borderWidth="1px"
+            borderColor="#D9E5F2"
+            color="black"
+            fontWeight="500"
+            pl="28px"
+            pr="32px"
+            value={viewMode}
+            onChange={(e) => setViewMode(e.target.value as "day" | "week" | "month" | "custom")}
+            _hover={{ borderColor: "gray.300" }}
+          >
+            <option value="day">This day</option>
+            <option value="week">This week</option>
+            <option value="month">This month</option>
+            <option value="custom">Custom</option>
+          </NativeSelectField>
+        </NativeSelectRoot>
 
         <Button
           variant="outline"

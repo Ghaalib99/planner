@@ -16,6 +16,8 @@ export interface Event {
   columnSpan?: number;
   subColumn?: number;
   subColumnSpan?: number;
+  date?: string;
+  description?: string;
 }
 
 export interface CalendarViewProps {
@@ -24,4 +26,16 @@ export interface CalendarViewProps {
   startHour?: number;
   endHour?: number;
   slotInterval?: 30 | 60;
+  currentDate?: Date;
+}
+
+export interface StaffMember {
+  id: string;
+  initials: string;
+  name: string;
+  totalHours: string;
+  overtimeHours: string;
+  dateRange: string;
+  daysWorked: string[];
+  status: "available" | "onLeave";
 }

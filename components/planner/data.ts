@@ -1,4 +1,4 @@
-import { Event } from "./types";
+import { Event, StaffMember } from "./types";
 
 export const defaultDepartments = [
   "Behandelingkamer1",
@@ -19,6 +19,8 @@ export const defaultEvents: Event[] = [
     column: 0,
     subColumn: 0,
     subColumnSpan: 1,
+    date: "2026-02-04",
+    description: "Scheduled surgery procedure in operating room",
   },
   {
     id: "2",
@@ -31,6 +33,8 @@ export const defaultEvents: Event[] = [
     column: 0,
     subColumn: 1,
     subColumnSpan: 1,
+    date: "2026-02-04",
+    description: "Pain specialist consultation",
   },
   {
     id: "3",
@@ -44,6 +48,8 @@ export const defaultEvents: Event[] = [
     columnSpan: 2,
     subColumn: 2,
     subColumnSpan: 3,
+    date: "2026-02-04",
+    description: "Extended pain management session",
   },
   {
     id: "4",
@@ -57,6 +63,8 @@ export const defaultEvents: Event[] = [
     columnSpan: 2,
     subColumn: 2,
     subColumnSpan: 3,
+    date: "2026-02-04",
+    description: "Pain specialist follow-up appointment",
   },
   {
     id: "5",
@@ -70,6 +78,8 @@ export const defaultEvents: Event[] = [
     columnSpan: 2,
     subColumn: 2,
     subColumnSpan: 2,
+    date: "2026-02-04",
+    description: "Late afternoon pain management clinic",
   },
   {
     id: "6",
@@ -82,5 +92,50 @@ export const defaultEvents: Event[] = [
     column: 3,
     subColumn: 1,
     subColumnSpan: 1,
+    date: "2026-02-04",
+    description: "Pain specialist consultation",
+  },
+];
+
+export const defaultStaff: StaffMember[] = [
+  {
+    id: "1",
+    initials: "EO",
+    name: "Elijah Oyin",
+    totalHours: "1158.0hrs",
+    overtimeHours: "38.0hrs",
+    dateRange: "Jan 8 - Jan 15",
+    daysWorked: ["m", "di", "w", "do", "vr"],
+    status: "onLeave",
+  },
+  {
+    id: "2",
+    initials: "DL",
+    name: "Diane Lane",
+    totalHours: "1158.0hrs",
+    overtimeHours: "38.0hrs",
+    dateRange: "Jan 12 - Jan 28",
+    daysWorked: ["m", "di", "w", "do", "vr"],
+    status: "onLeave",
+  },
+  {
+    id: "3",
+    initials: "EO",
+    name: "Elijah Oyin",
+    totalHours: "1158.0hrs",
+    overtimeHours: "38.0hrs",
+    dateRange: "Jan 12 - Jan 20",
+    daysWorked: ["m", "di", "w", "do", "vr"],
+    status: "onLeave",
+  },
+  {
+    id: "4",
+    initials: "HG",
+    name: "Haico De Gast",
+    totalHours: "1158.0hrs",
+    overtimeHours: "38.0hrs",
+    dateRange: "Jan 2 - Jan 9",
+    daysWorked: ["m", "di", "w", "do", "vr"],
+    status: "onLeave",
   },
 ];
