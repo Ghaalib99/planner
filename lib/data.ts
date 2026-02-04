@@ -1,5 +1,14 @@
 import { Event, StaffMember } from "./types";
 
+// Helper function to get today's date in YYYY-MM-DD format
+const getTodayDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 export const defaultDepartments = [
   "Behandelingkamer1",
   "Management",
@@ -19,7 +28,7 @@ export const defaultEvents: Event[] = [
     column: 0,
     subColumn: 0,
     subColumnSpan: 1,
-    date: "2026-02-04",
+    date: getTodayDate(),
     description: "Scheduled surgery procedure in operating room",
   },
   {
@@ -33,7 +42,7 @@ export const defaultEvents: Event[] = [
     column: 0,
     subColumn: 1,
     subColumnSpan: 1,
-    date: "2026-02-04",
+    date: getTodayDate(),
     description: "Pain specialist consultation",
   },
   {
@@ -48,7 +57,7 @@ export const defaultEvents: Event[] = [
     columnSpan: 2,
     subColumn: 2,
     subColumnSpan: 3,
-    date: "2026-02-04",
+    date: getTodayDate(),
     description: "Extended pain management session",
   },
   {
@@ -63,7 +72,7 @@ export const defaultEvents: Event[] = [
     columnSpan: 2,
     subColumn: 2,
     subColumnSpan: 3,
-    date: "2026-02-04",
+    date: getTodayDate(),
     description: "Pain specialist follow-up appointment",
   },
   {
@@ -78,7 +87,7 @@ export const defaultEvents: Event[] = [
     columnSpan: 2,
     subColumn: 2,
     subColumnSpan: 2,
-    date: "2026-02-04",
+    date: getTodayDate(),
     description: "Late afternoon pain management clinic",
   },
   {
@@ -92,7 +101,7 @@ export const defaultEvents: Event[] = [
     column: 3,
     subColumn: 1,
     subColumnSpan: 1,
-    date: "2026-02-04",
+    date: getTodayDate(),
     description: "Pain specialist consultation",
   },
 ];

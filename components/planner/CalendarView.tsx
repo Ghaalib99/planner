@@ -3,9 +3,42 @@
 import { Box, Grid, Text, VStack, HStack, Badge, Button } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useMemo, useState } from "react";
-import { Event, CalendarViewProps, TimeSlot } from "./types";
-import { defaultDepartments, defaultEvents } from "./data";
+import { Event, CalendarViewProps, TimeSlot } from "@/lib/types";
+import { defaultDepartments, defaultEvents } from "@/lib/data";
 import { EventDetailDialog } from "./EventDetailDialog";
+import { useDroppable } from "@dnd-kit/core";
+
+const DroppableCell = ({ 
+  id, 
+  children,
+  isLast = false,
+  isLastRow = false
+}: { 
+  id: string; 
+  children?: React.ReactNode;
+  isLast?: boolean;
+  isLastRow?: boolean;
+}) => {
+  const { setNodeRef, isOver } = useDroppable({ id });
+  
+  return (
+    <Box
+      ref={setNodeRef}
+      h="80px"
+      borderRight={!isLast ? "1px solid" : "none"}
+      borderBottom={!isLastRow ? "1px solid" : "none"}
+      borderColor="gray.300"
+      bg={isOver ? "blue.50" : "white"}
+      py={1}
+      transition="background 0.2s ease"
+      _hover={{ bg: isOver ? "blue.100" : "gray.50" }}
+      cursor="pointer"
+      position="relative"
+    >
+      {children}
+    </Box>
+  );
+};
 
 export const CalendarView = ({
   events = defaultEvents,
@@ -258,20 +291,17 @@ export const CalendarView = ({
               position="relative"
               minH="full"
             >
-              {timeSlots.map((_, rowIdx) => (
-                <Box
-                  key={rowIdx}
-                  h="80px"
-                  borderRight={colIdx < departments.length - 1 ? "1px solid" : "none"}
-                  borderBottom={rowIdx < timeSlots.length - 1 ? "1px solid" : "none"}
-                  borderColor="gray.300"
-                  bg="white"
-                  py={1}
-                  transition="background 0.2s ease"
-                  _hover={{ bg: "gray.50" }}
-                  cursor="pointer"
-                />
-              ))}
+              {timeSlots.map((slot, rowIdx) => {
+                const dropId = `${dept}-${slot.time}-${currentDateString}`;
+                return (
+                  <DroppableCell
+                    key={rowIdx}
+                    id={dropId}
+                    isLast={colIdx === departments.length - 1}
+                    isLastRow={rowIdx === timeSlots.length - 1}
+                  />
+                );
+              })}
 
               {colIdx === 0 && (() => {
                 const widthPercentage = 100 / 3; 

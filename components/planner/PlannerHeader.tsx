@@ -9,10 +9,20 @@ import { useState } from "react";
 interface PlannerHeaderProps {
   currentDate: Date;
   onDateChange: (date: Date) => void;
+  viewMode?: "day" | "week" | "month" | "custom";
+  onViewModeChange?: (mode: "day" | "week" | "month" | "custom") => void;
 }
 
-export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps) => {
-  const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "custom">("day");
+export const PlannerHeader = ({ 
+  currentDate, 
+  onDateChange,
+  viewMode: externalViewMode,
+  onViewModeChange
+}: PlannerHeaderProps) => {
+  const [internalViewMode, setInternalViewMode] = useState<"day" | "week" | "month" | "custom">("day");
+  
+  const viewMode = externalViewMode !== undefined ? externalViewMode : internalViewMode;
+  const setViewMode = onViewModeChange || setInternalViewMode;
   const formatDay = (date: Date) => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return `${days[date.getDay()]} ${date.getDate()}`;
@@ -47,17 +57,16 @@ export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps)
       mb={6}
       flexWrap="wrap"
     >
-      <HStack gap={4}>
-        <Text fontSize="sm" color="black" borderWidth="1px" borderColor="gray.300"  p={1} px={3} rounded="full" fontWeight="500">
+      <HStack gap={4} flexWrap="wrap">
+        <Text fontSize={{ base: "xs", md: "sm" }} color="black" borderWidth="1px" borderColor="gray.300"  p={1} px={3} rounded="full" fontWeight="500">
           {formatDay(currentDate)}
         </Text>
-        <Text fontSize="lg" fontWeight="600" color="gray.800">
+        <Text fontSize={{ base: "md", md: "lg" }} fontWeight="600" color="gray.800">
           {formatMonth(currentDate)}
         </Text>
       </HStack>
 
-      {/* Right: Controls */}
-      <HStack flexWrap="wrap">
+      <HStack flexWrap="wrap" gap={2}>
         <IconButton
           variant="ghost"
           size="sm"
@@ -175,6 +184,7 @@ export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps)
           borderStyle="solid"
           color={"#000"}
           _hover={{ bg: "gray.50" }}
+          display={{ base: "none", md: "flex" }}
         >
           Publish All
         </Button>
@@ -187,6 +197,7 @@ export const PlannerHeader = ({ currentDate, onDateChange }: PlannerHeaderProps)
           borderStyle="solid"
           color={"#000"}
           _hover={{ bg: "gray.50" }}
+          display={{ base: "none", md: "flex" }}
         >
           <Add size={20} style={{ marginRight: "0.5rem" }} color="#000"/>
           Lock Shift

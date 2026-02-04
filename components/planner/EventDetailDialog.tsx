@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Text, VStack, HStack, Portal } from "@chakra-ui/react";
-import { Event } from "./types";
+import { Event } from "@/lib/types";
 import { useEffect, useRef } from "react";
 import { CloseButton } from "@/components/ui/close-button";
 

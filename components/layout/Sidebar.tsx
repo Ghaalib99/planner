@@ -19,6 +19,9 @@ import Image from "next/image";
 import { RxDashboard } from "react-icons/rx";
 import { CgFile, CgFileDocument } from "react-icons/cg";
 import { TbFile } from "react-icons/tb";
+import { BsPlusSquareDotted } from "react-icons/bs";
+import { HiOutlineClipboard, HiOutlineClipboardCheck } from "react-icons/hi";
+import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 
 interface NavItem {
   label: string;
@@ -34,13 +37,13 @@ const navItems: NavItem[] = [
     path: "/",
   },
   {
-    label: "Rooster",
-    icon: AddSquare,
-    path: "/rooster",
+    label: "Roster",
+    icon: BsPlusSquareDotted,
+    path: "/roster",
     children: [
-      { label: "Mijn Rooster", icon: CgFileDocument, path: "/rooster/mijn" },
+      { label: "Mijn Rooster", icon: CgFileDocument, path: "/roster/mijn" },
       { label: "Planner", icon: CgFile, path: "/planner" },
-      { label: "Instellingen", icon: CgFile, path: "/rooster/settings" },
+      { label: "Instellingen", icon: CgFile, path: "/roster/settings" },
     ],
   },
   {
@@ -50,7 +53,7 @@ const navItems: NavItem[] = [
   },
   {
     label: "Document Management",
-    icon: TbFile,
+    icon: CgFileDocument,
     path: "/documents",
   },
   {
@@ -60,18 +63,18 @@ const navItems: NavItem[] = [
   },
   {
     label: "Knowledge Base",
-    icon: TbFile,
+    icon: HiOutlineClipboardDocumentList,
     path: "/knowledge-base",
   },
   {
     label: "General News",
-    icon: TbFile,
+    icon: HiOutlineClipboardCheck,
     path: "/general-news",
   },
 ];
 
 export const Sidebar = () => {
-  const [expandedItems, setExpandedItems] = useState<string[]>(["Rooster"]);
+  const [expandedItems, setExpandedItems] = useState<string[]>(["Roster"]);
   const [activeItem, setActiveItem] = useState("/planner");
 
   const toggleExpand = (label: string) => {
@@ -100,13 +103,13 @@ export const Sidebar = () => {
       pb={6}
     >
       <Flex align="center" justify="space-between" px={6} mb={6}>
-        <Image src="/logo.svg" alt="Logo" width={130} height={60} />
+        <Image src="/logo.svg" alt="Logo" width={150} height={70} />
         <IconButton aria-label="Search database">
           <HambergerMenu size="28" color="#2D3648" />
         </IconButton>
       </Flex>
 
-      <VStack align="stretch" gap={1} px={3}>
+      <VStack align="stretch" gap={1} px={3} >
         {navItems.map((item) => (
           <NavItemComponent
             key={item.label}
@@ -143,7 +146,7 @@ const NavItemComponent = ({
   const hasChildren = item.children && item.children.length > 0;
   const isActive = activeItem === item.path;
 
-  const isIconsaxIcon = [AddSquare, HambergerMenu].includes(Icon as any);
+  const isIconsaxIcon = [AddSquare, HambergerMenu, Calendar, Home, Setting2, DocumentText, Book, MessageText, Folder2].includes(Icon as any);
 
   const content = (
     <>
@@ -174,7 +177,7 @@ const NavItemComponent = ({
     w: "full",
     px: 3,
     py: 2.5,
-    borderRadius: "md",
+    borderRadius: isChild ? "0" : "md",
     bg: isActive ? "blue.50" : "transparent",
     color: isActive ? "blue.600" : "gray.700",
     _hover: {
@@ -183,7 +186,11 @@ const NavItemComponent = ({
     transition: "all 0.2s",
     cursor: "pointer",
     gap: 3,
-    pl: isChild ? 8 : 3,
+    ml: isChild ? 7 : 3,
+    pl: 4,
+    borderLeftWidth: isChild ? "3px" : "0",
+    borderLeftColor: isChild ? (isActive ? "blue.600" : "gray.300") : "transparent",
+    borderLeftStyle: "solid",
   };
 
   return (
